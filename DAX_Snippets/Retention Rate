@@ -1,0 +1,18 @@
+Retention Rate = 
+VAR donors_this_year = VALUES( Gift[constituent_id] )
+VAR donors_last_year = 
+  CALCULATETABLE(
+    VALUES( Gift[constituent_id] ),
+    DATEADD( 'Calendar'[Date], -1, YEAR )
+    )
+
+-- Returns the values on both tables
+VAR returning_donors = INTERSECT( donors_last_year, donors_this_year )  
+VAR returning_donor_count = COUNTROWS( returning_donors )
+
+RETURN
+DIVIDE(
+  returning_donor_count,
+  COUNTROWS( donors_last_year ),
+  0
+)
