@@ -1,3 +1,6 @@
+-- This measure utilizes a Time Intelligence DAX function and requires a separate Date table.
+-- The Date table here is titled Calendar
+
 Retention Rate = 
 VAR donors_this_year = VALUES( Gift[constituent_id] )
 VAR donors_last_year = 
