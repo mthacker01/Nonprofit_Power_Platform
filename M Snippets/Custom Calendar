@@ -1,13 +1,14 @@
 -- In Power BI, open the Power Query editor and create a new Blank Query. 
 -- On the Home tab of the PQ Editor, open Advance Editor and past the below code.
--- This code will find the first date on your Gift Table and the most recent date on your gift table,
--- so your calendar table will never be larger than what's required.
+-- This code will find the first date on your Gift Table and the most recent date on your gift table and create a date table from the start
+-- of the year from the first gift on record to the end of the year for the last gift date recorded.
+-- This allows your date table to be dynamic and never larger than it needs to be.
 
 *** If you do not want to have dynamic dates to create your calendar, replace the first line with:
 *** Source = {Number.From(#date(2011,12,31))..Number.From(#date(2022, 04, 10))},   -- or whatever dates you choose, the format is (YYYY, mm, dd)
 
 let
-    Source = {Number.From(List.Min(Gift[date]))..Number.From(List.Max(Gift[date]))},
+    Source = {Number.From(Date.StartOfYear(List.Min(Gift[date])))..Number.From(Date.EndOfYear(List.Max(Gift[date])))},
     #"Converted to Table" = Table.FromList(Source, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
     #"Changed Type" = Table.TransformColumnTypes(#"Converted to Table",{{"Column1", type date}}),
     #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"Column1", "Date"}}),
